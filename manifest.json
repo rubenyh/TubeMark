@@ -1,7 +1,7 @@
 {
-  "name": "YTBooksmarks",
+  "name": "TubeMark",
   "version": "0.1.0",
-  "description": "Save timestamps from youtube videos",
+  "description": "Easily bookmark and manage timestamps from YouTube videos for quick access.",
   "permissions": ["storage", "tabs", "activeTab"],
   "host_permissions": ["https://*.youtube.com/*"],
   "background": {
@@ -17,8 +17,8 @@
     {
       "resources": [
         "assets/bookmark.svg",
-        "assets/open.svg",
-        "assets/delete.svg",
+        "assets/open.png",
+        "assets/delete.png",
         "assets/save.png"
       ],
       "matches": ["*://www.youtube.com/*"]
@@ -26,11 +26,11 @@
   ],
   "action": {
     "default_icon": {
-      "16": "assets/ext-icon.svg",
-      "24": "assets/ext-icon.svg",
-      "32": "assets/ext-icon.svg"
+      "16": "assets/ext-icon.png",
+      "24": "assets/ext-icon.png",
+      "32": "assets/ext-icon.png"
     },
-    "default_title": "My YT Bookmarks",
+    "default_title": "TubeMark",
     "default_popup": "popup.html"
   },
   "manifest_version": 3
