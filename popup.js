@@ -43,8 +43,8 @@ const viewBookmarks = (currentBookmarks = []) => {
 
 
 const onDelete = async (e) => {
-    const activeTab = await getActiveTabURL();
-    const bookmarkTime = e.target.parentNode.getAttribute("timestamp");
+    const activeTab = await getCurrentTab();
+    const bookmarkTime = e.target.parentNode.parentNode.getAttribute("timestamp");
     const bookmarkElementToDelete = document.getElementById("bookmark-" + bookmarkTime);
 
     bookmarkElementToDelete.parentNode.removeChild(bookmarkElementToDelete);
@@ -80,16 +80,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     const activeTab = await getCurrentTab();
     const queryParameter = activeTab.url.split("?")[1];
     const urlParameters = new URLSearchParams(queryParameter);
-
     const currentVideo = urlParameters.get("v");
 
-    if(activeTab.url.includes("youtube.com/watch") && currentVideo){
-        chrome.storage.sync.get([currentVideo], (data) => {
+    const container = document.getElementsByClassName("container")[0];    
+
+    chrome.storage.sync.get(null, (data) => {
+        const allVideoIds = Object.keys(data);
+
+        if (activeTab.url.includes("youtube.com/watch") && currentVideo) {
             const currentVideoBookmarks = data[currentVideo] ? JSON.parse(data[currentVideo]) : [];
-            viewBookmarks(currentVideoBookmarks)
-        });
-    }else{
-        const container = document.getElementsByClassName("container")[0];
-        container.innerHTML = '<div class="title">This is not a youtube video page.</div>';
-    }
+            viewBookmarks(currentVideoBookmarks);
+        } else {
+            let allBookmarks = [];
+            for (let videoId of allVideoIds) {
+                const bookmarks = JSON.parse(data[videoId]);
+                allBookmarks.push({ videoId, bookmarks });
+            }
+
+            container.innerHTML = '<div class="title">Bookmarks from all videos:</div>';
+            for (let entry of allBookmarks) {
+                const videoElement = document.createElement("div");
+                videoElement.innerHTML = `<a href="https://www.youtube.com/watch?app=desktop&v=${entry.videoId}" target="_blank" rel="noopener noreferrer">Go to video</a>: ${entry.bookmarks.length} bookmarks`;
+                container.appendChild(videoElement);
+            }
+
+        }
+    });
 });
