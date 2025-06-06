@@ -12,7 +12,7 @@
     };
 
     const addNewBookmarkEventHandler = async () => {
-        if (!youtubePlayer) return;
+        // if (!youtubePlayer) return;
         const currentTime = youtubePlayer.currentTime;
         const newBookmark = {
             time: currentTime,
@@ -27,10 +27,10 @@
     };
 
     const newVideoLoaded = async () => {
-        if(!currentVideo) return;
+        // if(!currentVideo) return;
+        const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
         currentVideoBookmarks = await fetchBookmarks();
         
-        const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
         if(!bookmarkBtnExists){
 
             const bookmarkBtn = document.createElement("img");
@@ -40,10 +40,10 @@
             bookmarkBtn.title = "Click to bookmark current timestamp";
 
 
-            youtubeLeftControls = document.getElementsByClassName(".ytp-left-controls")[0];
-            youtubePlayer = document.getElementsByClassName(".video-stream")[0];
+            youtubeLeftControls = document.getElementsByClassName("ytp-left-controls")[0];
+            youtubePlayer = document.getElementsByClassName("video-stream")[0];
 
-            if (!youtubeLeftControls || !youtubePlayer) return;
+            // if (!youtubeLeftControls || !youtubePlayer) return;
 
             youtubeLeftControls.appendChild(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
@@ -51,18 +51,10 @@
     }
 
 
-    
-    const getTime = t => {
-        var date = new Date(0);
-        date.setSeconds(t);
-
-        return date.toISOString().substr(11, 8);
-    }
-
     chrome.runtime.onMessage.addListener((obj, sender, response) => {
         const { type, value, videoId } = obj;
         if(type === "NEW"){ 
-            currentVideo = videoId || "";
+            currentVideo = videoId || "There is no id";
             newVideoLoaded();
         }else if(type === "PLAY"){
             if(youtubePlayer) youtubePlayer.currentTime = value;
@@ -74,4 +66,14 @@
         }
     });
 
+    newVideoLoaded();
 })();
+
+    
+    const getTime = t => {
+        var date = new Date(0);
+        date.setSeconds(t);
+
+        return date.toISOString().slice(11, 19);
+    };
+

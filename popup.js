@@ -69,7 +69,7 @@ const onPlay = async (e) => {
 const setBookmarkAttributes = (src, eventListener, controlParentElement) => {
     const controlElement = document.createElement("img");
 
-    controlElement.src = "assets/" + src + ".png";
+    controlElement.src = "assets/" + src + ".svg";
     controlElement.title = src; 
     controlElement.addEventListener("click", eventListener);
     controlParentElement.appendChild(controlElement);
